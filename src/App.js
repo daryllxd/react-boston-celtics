@@ -30,6 +30,7 @@ class Player extends Component {
 
   handleMouseDown() {
     this.setState({ clicked: this.state.clicked + 1 });
+    this.props.callbackFromParent(this.props.name);
   };
 
   render() {
@@ -46,7 +47,16 @@ class Player extends Component {
 };
 
 class TeamBoxBody extends Component {
-  state = { selectedName: 'Rondo' };
+  constructor(props) {
+    super(props);
+    this.state = { selectedName: 'Huh' };
+
+    this.myCallback = this.myCallback.bind(this);
+  }
+
+  myCallback(dataFromChild) {
+    this.setState({ selectedName : dataFromChild});
+  }
 
   fullName(firstName, lastName) {
     return `${firstName} ${lastName}`;
@@ -54,7 +64,7 @@ class TeamBoxBody extends Component {
 
   render() {
     const { players } = this.props;
-    const rows = players.map(player => <Player name={ player.name } number={player.number} clicked={0}></Player>);
+    const rows = players.map(player => <Player callbackFromParent={this.myCallback} name={ player.name } number={player.number} clicked={0}></Player>);
 
     return(
       <div>
@@ -77,6 +87,7 @@ class TeamBox extends Component {
 }
 
 class SelectedPlayer extends Component {
+
   render() {
     const { player } = this.props;
 
